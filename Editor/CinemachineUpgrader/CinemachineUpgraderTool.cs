@@ -4,7 +4,7 @@
  * Created Date  : 12.22.2024
  *
  * © Murat Gökçe, 2024. All rights reserved.
- * This script is developed by Murat Gökçe and 
+ * This script is developed by Murat Gökçe and
  * unauthorized copying or distribution is prohibited.
  *******************************************************/
 
@@ -30,7 +30,7 @@ namespace CinemachineUpgrader
         [SerializeField] private CinemachineUpgradeData upgradeData;
         private SerializedObject serializedObject;
         private SerializedProperty upgradeDataProperty;
-        
+
         private const string PROCESSED_FILES_KEY = "CinemachineUpgrader_ProcessedFiles";
 
         [System.Serializable]
@@ -352,19 +352,10 @@ namespace CinemachineUpgrader
 
         private void UpgradeScripts()
         {
-            bool proceed = EditorUtility.DisplayDialog(
-                "Cinemachine Upgrade Warning",
-                "Before proceeding with the upgrade:\n\n" +
-                "1. Make sure you have backed up your entire project\n" +
-                "2. All script changes will also be backed up individually\n" +
-                "3. Consider committing your current changes to version control\n\n" +
-                "Do you want to continue with the upgrade process?",
-                "Yes, Proceed",
-                "Cancel"
-            );
+            bool proceed = EditorUtility.DisplayDialog("Cinemachine Upgrade Warning", "Before proceeding with the upgrade:\n\n" + "1. Make sure you have backed up your entire project\n" + "2. All script changes will also be backed up individually\n" + "3. Consider committing your current changes to version control\n\n" + "Do you want to continue with the upgrade process?", "Yes, Proceed", "Cancel");
 
             if (!proceed) return;
-            
+
             hasErrors = false;
             var currentFiles = new List<string>();
             ProcessDirectory(projectPath, currentFiles);
@@ -450,8 +441,9 @@ namespace CinemachineUpgrader
                 // First, find all variables of any known Cinemachine component type
                 foreach (var componentName in upgradeData.knownComponents)
                 {
-                    string pattern = $@"\b{componentName}\s+(\w+)\b";
-                    var matches = Regex.Matches(content, pattern);
+                    // Find all variables of this component type
+                    string variablePattern = $@"\b{componentName}\s+(\w+)\b";
+                    var matches = Regex.Matches(content, variablePattern);
                     foreach (Match match in matches)
                     {
                         if (match.Groups.Count > 1)
@@ -464,6 +456,62 @@ namespace CinemachineUpgrader
 
                             variableTypes[varName].Add(componentName);
                             AddLog($"Found component variable: {componentName} {varName}");
+                        }
+                    }
+                    
+                    // General m_ prefix pattern
+                    string prefixPattern = @"\b(\w+)\.m_(\w+)(\.m_(\w+))?";
+                    var prefixMatches = Regex.Matches(content, prefixPattern);
+                    foreach (Match match in prefixMatches)
+                    {
+                        string fullMatch = match.Value;
+                        string variableName = match.Groups[1].Value;
+                        string firstField = match.Groups[2].Value;
+                        string secondField = match.Groups[4].Success ? match.Groups[4].Value : null;
+
+                        string newValue = $"{variableName}.{firstField}";
+                        if (secondField != null)
+                        {
+                            newValue += $".{secondField}";
+                        }
+
+                        if (fullMatch != newValue)
+                        {
+                            content = content.Replace(fullMatch, newValue);
+                            fileModified = true;
+                            AddLog($"Removed m_ prefix: {fullMatch} -> {newValue}");
+                        }
+                    }
+
+
+                    // Capture accesses after GetComponent or FindObjectOfType
+                    string accessPattern = $@"(?:GetComponent<{componentName}>|FindObjectOfType<{componentName}>)\(\)\.m_(\w+)";
+                    var accessMatches = Regex.Matches(content, accessPattern);
+                    foreach (Match match in accessMatches)
+                    {
+                        string oldValue = match.Value;
+                        string fieldName = match.Groups[1].Value;
+
+                        // Check field replacement from component mappings
+                        var mapping = upgradeData.componentMappings.FirstOrDefault(m => m.oldComponentName == componentName);
+                        if (mapping != null)
+                        {
+                            var fieldReplacement = mapping.fieldReplacements.FirstOrDefault(f => f.oldFieldName == fieldName);
+                            if (fieldReplacement != null)
+                            {
+                                string newValue = oldValue.Replace($"m_{fieldName}", fieldReplacement.newFieldName);
+                                content = content.Replace(oldValue, newValue);
+                                fileModified = true;
+                                AddLog($"Replaced direct access: {oldValue} -> {newValue}");
+                            }
+                            else
+                            {
+                                // If there is no specific replacement, remove the m_ prefix
+                                string newValue = oldValue.Replace($"m_{fieldName}", fieldName);
+                                content = content.Replace(oldValue, newValue);
+                                fileModified = true;
+                                AddLog($"Removed m_ prefix: {oldValue} -> {newValue}");
+                            }
                         }
                     }
                 }

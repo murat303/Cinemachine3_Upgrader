@@ -93,7 +93,9 @@ namespace CinemachineUpgrader
                     "CinemachineMixingCamera",
                     "CinemachineRecomposer",
                     "CinemachineClearShot",
-                    "CinemachineStateDriver"
+                    "CinemachineStateDriver",
+                    "CinemachineBrain.UpdateMethod",
+                    "CinemachineBlendDefinition.Style"
                 };
             }
 
@@ -118,7 +120,9 @@ namespace CinemachineUpgrader
                     CreateComponentData("CinemachineConfiner", "CinemachineConfiner3D"),
                     CreateComponentData("Cinemachine3rdPersonFollow", "CinemachineThirdPersonFollow"),
                     CreateComponentData("Cinemachine3rdPersonAim", "CinemachineThirdPersonAim"),
-                    CreateComponentData("CinemachineBlendListCamera", "CinemachineSequencerCamera")
+                    CreateComponentData("CinemachineBlendListCamera", "CinemachineSequencerCamera"),
+                    CreateComponentData("CinemachineBrain.UpdateMethod", "CinemachineBrain.UpdateMethods"),
+                    CreateComponentData("CinemachineBlendDefinition.Style", "CinemachineBlendDefinition.Styles")
                 };
             }
 

@@ -46,6 +46,8 @@ MonoBehaviour:
   - CinemachineRecomposer
   - CinemachineClearShot
   - CinemachineStateDriver
+  - CinemachineBrain.UpdateMethod
+  - CinemachineBlendDefinition.Style
   componentMappings:
   - oldComponentName: CinemachineVirtualCamera
     newComponentName: CinemachineCamera
@@ -99,6 +101,12 @@ MonoBehaviour:
     fieldReplacements: []
   - oldComponentName: CinemachineBlendListCamera
     newComponentName: CinemachineSequencerCamera
+    fieldReplacements: []
+  - oldComponentName: CinemachineBrain.UpdateMethod
+    newComponentName: CinemachineBrain.UpdateMethods
+    fieldReplacements: []
+  - oldComponentName: CinemachineBlendDefinition.Style
+    newComponentName: CinemachineBlendDefinition.Styles
     fieldReplacements: []
   namespaceReplacements:
   - using Cinemachine;|using Unity.Cinemachine;
