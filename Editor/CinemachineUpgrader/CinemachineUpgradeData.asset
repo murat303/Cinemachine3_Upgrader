@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ca65e702e6fe4e4c92be3414e297458, type: 3}
+  m_Name: CinemachineUpgradeData
+  m_EditorClassIdentifier: 
+  knownComponents:
+  - CinemachineVirtualCamera
+  - CinemachineFreeLook
+  - CinemachinePath
+  - CinemachineSmoothPath
+  - CinemachineDollyCart
+  - CinemachineTransposer
+  - CinemachineOrbitalTransposer
+  - CinemachineFramingTransposer
+  - CinemachineComposer
+  - CinemachinePOV
+  - CinemachineTrackedDolly
+  - CinemachineGroupComposer
+  - CinemachineCollider
+  - CinemachineConfiner
+  - Cinemachine3rdPersonFollow
+  - Cinemachine3rdPersonAim
+  - CinemachineBlendListCamera
+  - CinemachineBrain
+  - CinemachineExternalCamera
+  - CinemachineFollowZoom
+  - CinemachineHardLockToTarget
+  - CinemachineHardLookAt
+  - CinemachineOrbitalFollow
+  - CinemachinePipeline
+  - CinemachineSameAsFollowTarget
+  - CinemachineSplineCart
+  - CinemachineStoryboard
+  - CinemachineTargetGroup
+  - CinemachinePixelPerfect
+  - CinemachineMixingCamera
+  - CinemachineRecomposer
+  - CinemachineClearShot
+  - CinemachineStateDriver
+  componentMappings:
+  - oldComponentName: CinemachineVirtualCamera
+    newComponentName: CinemachineCamera
+    fieldReplacements: []
+  - oldComponentName: CinemachineFreeLook
+    newComponentName: CinemachineCamera
+    fieldReplacements: []
+  - oldComponentName: CinemachinePath
+    newComponentName: SplineContainer
+    fieldReplacements: []
+  - oldComponentName: CinemachineSmoothPath
+    newComponentName: SplineContainer
+    fieldReplacements: []
+  - oldComponentName: CinemachineDollyCart
+    newComponentName: CinemachineSplineCart
+    fieldReplacements:
+    - oldFieldName: Position
+      newFieldName: SplinePosition
+  - oldComponentName: CinemachineTransposer
+    newComponentName: CinemachineFollow
+    fieldReplacements: []
+  - oldComponentName: CinemachineOrbitalTransposer
+    newComponentName: CinemachineOrbitalFollow
+    fieldReplacements: []
+  - oldComponentName: CinemachineFramingTransposer
+    newComponentName: CinemachinePositionComposer
+    fieldReplacements: []
+  - oldComponentName: CinemachineComposer
+    newComponentName: CinemachineRotationComposer
+    fieldReplacements: []
+  - oldComponentName: CinemachinePOV
+    newComponentName: CinemachinePanTilt
+    fieldReplacements: []
+  - oldComponentName: CinemachineTrackedDolly
+    newComponentName: CinemachineSplineDolly
+    fieldReplacements: []
+  - oldComponentName: CinemachineGroupComposer
+    newComponentName: CinemachineGroupFraming
+    fieldReplacements: []
+  - oldComponentName: CinemachineCollider
+    newComponentName: CinemachineDeoccluder
+    fieldReplacements: []
+  - oldComponentName: CinemachineConfiner
+    newComponentName: CinemachineConfiner3D
+    fieldReplacements: []
+  - oldComponentName: Cinemachine3rdPersonFollow
+    newComponentName: CinemachineThirdPersonFollow
+    fieldReplacements: []
+  - oldComponentName: Cinemachine3rdPersonAim
+    newComponentName: CinemachineThirdPersonAim
+    fieldReplacements: []
+  - oldComponentName: CinemachineBlendListCamera
+    newComponentName: CinemachineSequencerCamera
+    fieldReplacements: []
+  namespaceReplacements:
+  - using Cinemachine;|using Unity.Cinemachine;
+  - using Cinemachine.Editor;|using Unity.Cinemachine.Editor;
+  - using Cinemachine.Utility;|using Unity.Cinemachine;
+  methodReplacements:
+  - SimpleFollowWithWorldUp|LazyFollow
+  - GetCinemachineComponent|GetComponent
